@@ -26,7 +26,7 @@ export default function VotePage({ params }: { params: { pollId: string } }) {
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
     console.log("Poll ID:", params.pollId);
     fetchPoll();
-  }, [params.pollId]);
+  }, [params.pollId, fetchPoll]);
 
   async function fetchPoll() {
     try {

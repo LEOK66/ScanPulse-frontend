@@ -51,7 +51,7 @@ export default function PollDetailsPage({
 
   useEffect(() => {
     fetchPollDetails();
-  }, [params.pollId]);
+  }, [params.pollId, fetchPollDetails]);
 
   async function fetchPollDetails() {
     try {
