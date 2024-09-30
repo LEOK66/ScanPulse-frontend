@@ -24,7 +24,6 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,9 +38,9 @@ export default function RegisterPage() {
     }
 
     try {
-      const data = await registerUser(email, password);
-      login(data.token);
-      router.push("/dashboard");
+      await registerUser(email, password);
+      // Optionally, display a success message before redirecting
+      router.push("/login");
     } catch (error: any) {
       setError(error.message || "Registration failed. Please try again.");
     }
