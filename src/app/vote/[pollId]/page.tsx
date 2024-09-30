@@ -25,22 +25,22 @@ export default function VotePage({ params }: { params: { pollId: string } }) {
     console.log("Frontend URL:", process.env.NEXT_PUBLIC_FRONTEND_URL);
     console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
     console.log("Poll ID:", params.pollId);
-    fetchPoll();
-  }, [params.pollId, fetchPoll]);
-
-  async function fetchPoll() {
-    try {
-      console.log("Fetching poll...");
-      const fetchedPoll = await getPoll(params.pollId);
-      console.log("Fetched poll:", fetchedPoll);
-      setPoll(fetchedPoll);
-    } catch (error) {
-      console.error("Error fetching poll:", error);
-      setError("Failed to fetch poll");
-    } finally {
-      setIsLoading(false);
+    async function fetchPoll() {
+      try {
+        console.log("Fetching poll...");
+        const fetchedPoll = await getPoll(params.pollId);
+        console.log("Fetched poll:", fetchedPoll);
+        setPoll(fetchedPoll);
+      } catch (error) {
+        console.error("Error fetching poll:", error);
+        setError("Failed to fetch poll");
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }
+
+    fetchPoll();
+  }, [params.pollId]);
 
   async function handleVote(emoji: string) {
     try {

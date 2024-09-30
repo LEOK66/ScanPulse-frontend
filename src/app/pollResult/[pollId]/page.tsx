@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { getPoll, deletePoll } from "@/lib/api";
+import { getPoll } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,11 +19,9 @@ import {
   ResponsiveContainer,
   Legend,
   Tooltip,
-  Label,
-  PieLabelRenderProps,
 } from "recharts";
 import { QRCodeSVG } from "qrcode.react";
-import { Download, Trash2, RefreshCw, QrCode } from "lucide-react";
+import { Download, RefreshCw, QrCode } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface PollResults {
@@ -49,11 +47,8 @@ export default function PollDetailsPage({
   const router = useRouter();
   const qrCodeUrl = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/vote/${params.pollId}`;
 
-  useEffect(() => {
-    fetchPollDetails();
-  }, [params.pollId, fetchPollDetails]);
-
-  async function fetchPollDetails() {
+  // Memoize the fetchPollDetails function
+  const fetchPollDetails = useCallback(async () => {
     try {
       setIsLoading(true);
       const pollData = await getPoll(params.pollId);
@@ -64,18 +59,11 @@ export default function PollDetailsPage({
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [params.pollId]);
 
-  async function handleDeletePoll() {
-    if (window.confirm("Are you sure you want to delete this poll?")) {
-      try {
-        await deletePoll(params.pollId);
-        router.push("/dashboard");
-      } catch (error) {
-        setError("Failed to delete poll. Please try again.");
-      }
-    }
-  }
+  useEffect(() => {
+    fetchPollDetails();
+  }, [fetchPollDetails]);
 
   function handleDownloadQRCode() {
     const svg = document.getElementById("qr-code");
